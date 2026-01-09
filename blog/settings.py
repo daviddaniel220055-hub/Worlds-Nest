@@ -16,8 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 
 # DEBUG: True locally, False on Render
-DEBUG = True
-# DEBUG = os.environ.get("DEBUG", "False") == "True"
+# DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["worlds-nest-1.onrender.com","localhost", "127.0.0.1"]
 
@@ -165,6 +165,20 @@ cloudinary.config(
     api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
     secure=True,
 )
+
+# CLOUDINARY_STORAGE = {
+#     "CLOUD_NAME": "dnmj3dh9p",
+#     "API_KEY": "193565585319528",
+#     "API_SECRET": "RX_jhj47RixXw-NB6NUOonpJwbE",
+# }
+
+# 🔥 THIS IS THE MISSING PART THAT FIXES THE ERROR
+# cloudinary.config(
+#     cloud_name="dnmj3dh9p",
+#     api_key="193565585319528",
+#     api_secret="RX_jhj47RixXw-NB6NUOonpJwbE",
+#     secure=True
+# )
 
 
 # =========================
