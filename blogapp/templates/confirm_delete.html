@@ -1,0 +1,23 @@
+{% load static widget_tweaks %}
+{% load cloudinary %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <link href="{% static 'blogapp/css/output.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+<h2>Are you sure you want to delete "{{ post.title }}"?</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" style="background:red; color:white;">Yes, Delete</button>
+    <a href="{% url 'my_posts' %}">Cancel</a>
+</form>
+
+</body>
+</html>
+
+

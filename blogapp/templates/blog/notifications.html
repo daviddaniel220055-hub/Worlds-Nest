@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: #f6f7fb;
+    color: #111827;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+.header {
+    padding: 20px 24px;
+    background: linear-gradient(to right, #6366f1, #a855f7);
+    color: white;
+}
+
+.notification {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification.unread {
+    background: #eef2ff;
+    font-weight: 600;
+}
+
+.notification:last-child {
+    border-bottom: none;
+}
+
+.notification small {
+    color: #6b7280;
+}
+
+.empty {
+    padding: 40px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 10px;
+    color: #e0e7ff;
+    font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>🔔 Notifications</h2>
+        <a href="{% url 'dashboard' %}" class="back">← Back to Dashboard</a>
+    </div>
+
+    {% for n in notifications %}
+        <div class="notification {% if not n.is_read %}unread{% endif %}">
+            <div>
+                {{ n.message }}
+                <br>
+                <small>{{ n.created_at|date:"M d, Y · H:i" }}</small>
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty">
+            No notifications yet 🚀
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

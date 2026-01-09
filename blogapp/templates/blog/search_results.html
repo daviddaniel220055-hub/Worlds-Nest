@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff, #fdf2f8);
+            color: #1f2937;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .query {
+            color: #4f46e5;
+        }
+
+        /* POST ITEM */
+        .post {
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s ease;
+        }
+
+        .post:hover {
+            background: #f9fafb;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+        }
+
+        .post-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #4f46e5;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px 0;
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>
+        Search results for
+        <span class="query">"{{ query }}"</span>
+    </h2>
+
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post">
+                <a href="{% url 'post_detail' post.id %}" class="post-title">
+                    {{ post.title }}
+                </a>
+
+                <div class="meta">
+                    By <strong>{{ post.author.username }}</strong> ·
+                    {{ post.created_at|date:"M d, Y" }}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            😕 No results found.
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

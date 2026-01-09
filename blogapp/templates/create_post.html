@@ -1,0 +1,206 @@
+{% load static widget_tweaks %}
+{% load cloudinary %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Post</title>
+
+{{ form.media }}
+
+<style>
+/* ================= RESET ================= */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #e7f0ff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* ================= CARD ================= */
+.post-card {
+    background: white;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+/* ================= HEADER ================= */
+.card-header {
+    background: linear-gradient(135deg, #1877f2, #2563eb);
+    padding: 40px 25px;
+    text-align: center;
+}
+
+.card-header h1 {
+    color: white;
+    font-size: 34px;
+    margin: 0;
+    font-weight: 800;
+}
+
+.card-header p {
+    color: #dbeafe;
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+/* ================= FORM ================= */
+.post-form {
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #c7d2fe;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #1877f2;
+    box-shadow: 0 0 0 3px rgba(24,119,242,0.15);
+}
+
+/* ================= CKEDITOR ================= */
+.django-ckeditor-widget {
+    width: 100%;
+}
+
+.cke_contents {
+    min-height: 360px !important;
+}
+
+/* ================= ACTIONS ================= */
+.actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.publish-btn {
+    flex: 1;
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.publish-btn:hover {
+    background: #155fd1;
+}
+
+.back-btn {
+    flex: 1;
+    text-align: center;
+    padding: 16px;
+    border-radius: 999px;
+    border: 2px solid #1877f2;
+    color: #1877f2;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    background: #e7f0ff;
+}
+
+/* ================= ERRORS ================= */
+.errorlist {
+    color: #dc2626;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .card-header h1 {
+        font-size: 26px;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="post-card">
+
+    <!-- HEADER -->
+    <div class="card-header">
+        <h1>Create a New Post</h1>
+        <p>Share your thoughts with the world</p>
+    </div>
+
+    <!-- FORM -->
+    <form method="POST" enctype="multipart/form-data" class="post-form">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+                {{ field.errors }}
+
+                {% if field.name == "content" %}
+                    {{ field }}
+                {% else %}
+                    {{ field|add_class:"" }}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="actions">
+            <button type="submit" class="publish-btn">
+                📤 Publish Post
+            </button>
+
+            <a href="{% url 'dashboard' %}" class="back-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>

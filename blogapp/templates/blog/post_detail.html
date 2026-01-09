@@ -1,0 +1,341 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ post.title }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f0f2f5;
+}
+
+/* ================= TOP BAR ================= */
+.top-bar {
+    background: #ffffff;
+    padding: 14px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.top-bar-inner {
+    max-width: 720px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 20px;
+    color: #1877f2;
+}
+
+.search-form {
+    flex: 1;
+}
+
+.search-form input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: none;
+    outline: none;
+    background: #f0f2f5;
+    font-size: 15px;
+}
+
+/* ================= CONTAINER ================= */
+.container {
+    max-width: 720px;
+    margin: 18px auto;
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+}
+
+/* ================= POST ================= */
+h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.meta {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.post-image img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 18px 0;
+}
+
+.content {
+    font-size: 18px;
+    line-height: 1.9;
+    margin-bottom: 28px;
+}
+
+.views {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 18px;
+}
+
+/* ================= LIKE ================= */
+.like-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.like-btn {
+    background: none;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+}
+
+.like-btn.liked {
+    color: #e0245e;
+    transform: scale(1.2);
+}
+
+.like-count {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* ================= COMMENTS ================= */
+.comments {
+    margin-top: 40px;
+}
+
+.comments h2 {
+    margin-bottom: 12px;
+}
+
+.login-note {
+    text-align: center;
+    color: #6b7280;
+    font-size: 15px;
+    margin-bottom: 14px;
+}
+
+.comment {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 18px 0;
+}
+
+.comment strong {
+    font-size: 15px;
+}
+
+.comment p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 10px 0;
+}
+
+.reply {
+    margin-left: 28px;
+    margin-top: 12px;
+    padding-left: 14px;
+    border-left: 3px solid #e5e7eb;
+}
+
+textarea {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    margin-top: 10px;
+    resize: vertical;
+}
+
+button {
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+/* ================= DESKTOP ================= */
+@media (min-width: 900px) {
+    .container {
+        max-width: 820px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔍 TOP BAR -->
+<div class="top-bar">
+    <div class="top-bar-inner">
+        <div class="logo">MyBlog</div>
+        <form class="search-form" action="{% url 'search_posts' %}" method="GET">
+            <input type="text" name="q" placeholder="Search posts or authors...">
+        </form>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- POST -->
+    <h1>{{ post.title }}</h1>
+
+    <div class="meta">
+        By <strong>{{ post.author.username }}</strong> ·
+        {{ post.created_at|date:"M d, Y" }}
+    </div>
+
+    {% if post.image %}
+        <div class="post-image">
+            <img src="{{ post.image.url }}">
+        </div>
+    {% endif %}
+
+    <div class="content">
+        {{ post.content|linebreaks }}
+    </div>
+
+    <div class="views">
+        👁 {{ post.views }} views
+    </div>
+
+    <!-- ❤️ LIKE -->
+    <div class="like-section">
+        {% if user.is_authenticated %}
+            <button class="like-btn {% if user in post.likes.all %}liked{% endif %}"
+                    id="likeBtn"
+                    data-post-id="{{ post.id }}">
+                ❤️
+            </button>
+        {% else %}
+            ❤️
+        {% endif %}
+        <span class="like-count" id="likeCount">
+            {{ post.likes.count }} likes
+        </span>
+    </div>
+
+    <!-- 💬 COMMENTS -->
+   <!-- 💬 COMMENTS -->
+<div class="comments">
+    <h2>Comments</h2>
+
+    <!-- NEW COMMENT -->
+    {% if user.is_authenticated %}
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="content" rows="3" placeholder="Write a comment..." required></textarea>
+            <button type="submit">Post</button>
+        </form>
+    {% else %}
+        <p class="login-note">Login to comment.</p>
+    {% endif %}
+
+    {% if not comments %}
+        <p class="login-note">Be the first to comment 💬</p>
+    {% endif %}
+
+    {% for comment in comments %}
+        <div class="comment">
+
+            <strong>{{ comment.user.username }}</strong>
+            <small> · {{ comment.created_at|timesince }} ago</small>
+
+            <p>{{ comment.content }}</p>
+
+            <!-- DELETE COMMENT -->
+            {% if user == comment.user %}
+                <form method="POST" action="{% url 'delete_comment' comment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" style="background:#ef4444;">
+                        Delete
+                    </button>
+                </form>
+            {% endif %}
+
+            <!-- REPLY -->
+            {% if user.is_authenticated %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <textarea name="content" rows="2" placeholder="Write a reply..."></textarea>
+                    <button type="submit">Reply</button>
+                </form>
+            {% endif %}
+
+            <!-- REPLIES -->
+            {% for reply in comment.replies.all %}
+                <div class="reply">
+                    <strong>{{ reply.user.username }}</strong>
+                    <small> · {{ reply.created_at|timesince }} ago</small>
+                    <p>{{ reply.content }}</p>
+
+                    {% if user == reply.user %}
+                        <form method="POST" action="{% url 'delete_comment' reply.id %}">
+                            {% csrf_token %}
+                            <button type="submit" style="background:#ef4444;">
+                                Delete
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+        </div>
+    {% endfor %}
+</div>
+
+<!-- ❤️ LIKE AJAX -->
+<script>
+const likeBtn = document.getElementById("likeBtn");
+
+if (likeBtn) {
+    likeBtn.addEventListener("click", function () {
+        fetch("{% url 'toggle_like' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ post_id: this.dataset.postId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("likeCount").innerText =
+                data.likes_count + " likes";
+            this.classList.toggle("liked", data.liked);
+        });
+    });
+}
+</script>
+
+</body>
+</html>

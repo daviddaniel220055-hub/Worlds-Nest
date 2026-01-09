@@ -1,0 +1,356 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ profile.user.username|capfirst }}'s Profile</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f1f5f9;
+    color: #1f2937;
+}
+
+a { text-decoration: none; color: inherit; }
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #1e40af, #1e3a8a);
+    color: #e0f2fe;
+    padding: 2rem 1.5rem;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar a {
+    display: block;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: rgba(255,255,255,0.15);
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+/* PROFILE CARD */
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+}
+
+.profile-avatar {
+    position: relative;
+}
+
+.profile-avatar img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #3b82f6;
+}
+
+.upload-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* STATS */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.stat-card .number {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #3b82f6;
+}
+
+/* POSTS */
+.posts {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.post {
+    padding: 1rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.post:last-child {
+    border-bottom: none;
+}
+
+.post-title {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.post-date {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* FORM */
+.profile-form {
+    max-width: 420px;
+}
+
+.profile-form button {
+    width: 100%;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 14px;
+    font-weight: 700;
+}
+
+
+
+
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+
+/* Tablets (≤ 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .sidebar h2 {
+        display: none;
+    }
+
+    .sidebar a {
+        margin: 0;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .main {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* Mobile (≤ 768px) */
+@media (max-width: 768px) {
+
+    .main {
+        padding: 1.5rem 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.2rem;
+    }
+
+    .profile-avatar img {
+        width: 95px;
+        height: 95px;
+    }
+
+    /* Stats */
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    /* Posts */
+    .posts {
+        padding: 1.5rem;
+    }
+
+    .post-title {
+        font-size: 0.95rem;
+    }
+}
+
+/* Small Mobile (≤ 480px) */
+@media (max-width: 480px) {
+
+    .sidebar a {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .header h1 {
+        font-size: 1.4rem;
+    }
+
+    .profile-form button {
+        font-size: 0.9rem;
+        padding: 0.65rem;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<aside class="sidebar">
+    <h2>Menu</h2>
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'profile' %}" class="active">Profile</a>
+    <a href="{% url 'logout' %}">Logout</a>
+</aside>
+
+<main class="main">
+
+<div class="header">
+    <h1>{{ profile.user.username|capfirst }}'s Profile</h1>
+</div>
+
+<div class="profile-card">
+
+{% if is_own_profile %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+{% endif %}
+
+<div class="profile-avatar">
+    {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}">
+    {% else %}
+        <img src="{% static 'images/default.png' %}">
+    {% endif %}
+
+    {% if is_own_profile %}
+    <input type="file" name="profile_picture" id="profilePicture"
+           accept="image/*" style="display:none"
+           onchange="this.form.submit();">
+
+    <button type="button" class="upload-btn"
+            onclick="document.getElementById('profilePicture').click();">+</button>
+    {% endif %}
+</div>
+
+{% if is_own_profile %}
+</form>
+{% endif %}
+
+<div>
+    <h2>{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+    <p>{{ profile.user.email }}</p>
+</div>
+
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <div class="number">{{ posts.count }}</div>
+        <div>Posts</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="number">{{ profile.user.date_joined|date:"M Y" }}</div>
+        <div>Member Since</div>
+    </div>
+</div>
+
+<div class="posts">
+    <h2>Posts by {{ profile.user.username }}</h2>
+
+    {% for post in posts %}
+        <div class="post">
+            <a href="{% url 'post_detail' post.id %}" class="post-title">
+                {{ post.title }}
+            </a>
+            <div class="post-date">
+                {{ post.created_at|date:"M d, Y" }}
+            </div>
+        </div>
+    {% empty %}
+        <p>No posts yet.</p>
+    {% endfor %}
+</div>
+
+{% if is_own_profile %}
+<form method="POST" class="profile-form">
+    {% csrf_token %}
+    <button type="submit">Update Profile</button>
+</form>
+{% endif %}
+
+</main>
+</div>
+
+</body>
+</html>

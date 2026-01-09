@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Feed</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f0f2f5;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    background: #1877f2;
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar strong {
+    font-size: 22px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 18px;
+    font-weight: 600;
+}
+
+/* ================= SEARCH ================= */
+.dashboard-search {
+    padding: 14px;
+    background: #f0f2f5;
+}
+
+.dashboard-search input {
+    width: 100%;
+    padding: 1rem 1.3rem;
+    border-radius: 999px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+/* ================= FEED ================= */
+.feed {
+    padding: 12px;
+    max-width: 680px;
+    margin: auto;
+}
+
+/* ================= POST ================= */
+.post {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.post-header strong {
+    font-size: 17px;
+}
+
+.post-header small {
+    display: block;
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* CONTENT */
+.post-content {
+    margin: 16px 0;
+    font-size: 17px;
+    line-height: 1.8; /* 🔥 TALL FEEL */
+}
+
+/* IMAGE */
+.post img {
+    width: 100%;
+    border-radius: 12px;
+    margin: 14px 0;
+    max-height: 520px;
+    object-fit: cover;
+}
+
+/* COUNTS */
+.counts {
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* ACTIONS */
+.actions {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 14px;
+    margin-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.action-btn {
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #374151;
+}
+
+.action-btn:hover {
+    color: #1877f2;
+}
+
+.liked {
+    color: #e0245e;
+}
+
+/* ================= DESKTOP ENHANCEMENT ================= */
+@media (min-width: 900px) {
+    .feed {
+        max-width: 760px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <strong>MyBlog</strong>
+    <div>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+
+<!-- SEARCH -->
+<form action="{% url 'search_posts' %}" method="GET" class="dashboard-search">
+    <input type="text" name="q" placeholder="Search posts or authors...">
+</form>
+
+<!-- FEED -->
+<div class="feed">
+
+{% for post in posts %}
+<div class="post">
+
+    <div class="post-header">
+        <strong>{{ post.author.username }}</strong>
+        <small>{{ post.created_at|date:"M d, Y" }}</small>
+    </div>
+
+    <div class="post-content">
+        {{ post.content }}
+    </div>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}">
+    {% endif %}
+
+    <div class="counts">
+        ❤️ {{ post.likes.count }} likes · 💬 {{ post.comments.count }} comments
+    </div>
+
+    <div class="actions">
+        <div class="action-btn {% if user in post.likes.all %}liked{% endif %}"
+             onclick="toggleLike({{ post.id }})">
+            ❤️ Like
+        </div>
+
+        <a class="action-btn" href="{% url 'post_detail' post.id %}#comments">
+            💬 Comment
+        </a>
+    </div>
+
+</div>
+{% empty %}
+<p style="text-align:center; color:#777; font-size:16px;">
+    No posts yet.
+</p>
+{% endfor %}
+
+</div>
+
+<script>
+function toggleLike(postId) {
+    fetch(`/post/${postId}/like/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+        }
+    }).then(() => location.reload());
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+</script>
+
+</body>
+</html>
