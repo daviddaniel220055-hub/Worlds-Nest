@@ -16,8 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
 
 # DEBUG: True locally, False on Render
-# DEBUG = "RENDER" not in os.environ
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
+# DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["worlds-nest-1.onrender.com","localhost", "127.0.0.1"]
 
