@@ -220,7 +220,7 @@ button {
     {% endif %}
 
     <div class="content">
-        {{ post.content|linebreaks }}
+        {{ post.content|safe }}
     </div>
 
     <div class="views">
