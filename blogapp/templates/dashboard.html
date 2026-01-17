@@ -1,342 +1,126 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+{% extends 'dashboard_base.html' %}
 
-<script src="https://unpkg.com/feather-icons"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-* { box-sizing: border-box; }
-
-
-
-body {
-    margin: 0;
-    font-family: 'Inter', Helvetica, Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f3ff, #fdf2f8);
-    color: #1f2937;
-}
-
-
-/* DASHBOARD SEARCH BAR */
-.dashboard-search {
-    flex: 1;
-    max-width: 380px;
-}
-
-.dashboard-search input {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    border-radius: 999px;
-    border: none;
-    outline: none;
-    font-size: 0.95rem;
-    background: white;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-.dashboard-search input::placeholder {
-    color: #9ca3af;
-}
-
-
-a { text-decoration: none; color: inherit; }
-
-.layout {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* SIDEBAR */
-aside {
-    width: 18rem;
-    background: linear-gradient(180deg, #1e40af, #1e3a8a);
-    color: #e0f2fe;
-    padding: 1.5rem;
-}
-
-aside h1 {
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
-}
-
-aside nav a,
-.logout {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    transition: background 0.3s;
-}
-
-aside nav a:hover { background: rgba(255,255,255,0.15); }
-.logout:hover { background: rgba(239,68,68,0.25); }
-
-/* MAIN */
-main {
-    flex: 1;
-    padding: 2rem;
-}
-
-.container {
-    max-width: 1200px;
-    margin: auto;
-}
-
-/* HEADER */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
-    padding: 1.75rem 2rem;
-    border-radius: 1.25rem;
-    color: white;
-    margin-bottom: 2.5rem;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-/* NOTIFICATIONS (PAGE LINK ONLY) */
-.notification-wrapper {
-    position: relative;
-}
-
-.notification-bell {
-    position: relative;
-}
-
-.notification-count {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    background: #ef4444;
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 999px;
-    font-weight: bold;
-}
-
-/* PROFILE */
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.profile img {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 9999px;
-    border: 3px solid white;
-}
-
-/* CARDS */
-.card {
-    background: white;
-    border-radius: 1.25rem;
-    padding: 1.75rem;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
-/* STATS */
-.stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-}
-
-.card .icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    background: linear-gradient(135deg, #6366f1, #a855f7);
-    color: white;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.card .number {
-    font-size: 2rem;
-    font-weight: 800;
-}
-
-/* LOWER */
-.lower {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-}
-
-#viewsChart {
-    width: 100% !important;
-    height: 220px !important;
-}
-
-.recent-post {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.recent-post:last-child {
-    border-bottom: none;
-}
-
-.recent-post-title {
-    font-weight: 600;
-}
-
-.recent-post-date {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-@media (max-width: 768px) {
-    .layout { flex-direction: column; }
-    aside { width: 100%; }
-    header { flex-direction: column; gap: 1rem; }
-    .lower { grid-template-columns: 1fr; }
-}
-</style>
-</head>
-
-<body>
-
-<div class="layout">
-
-<!-- SIDEBAR -->
-<aside>
-    <h1><i data-feather="monitor"></i> Menu</h1>
-    <nav>
-        <a href="{% url 'dashboard' %}"><i data-feather="home"></i> Dashboard</a>
-        <a href="{% url 'my_posts' %}"><i data-feather="file-text"></i> My Posts</a>
-        <a href="{% url 'create_post' %}"><i data-feather="plus-circle"></i> Create Post</a>
-        <a href="{% url 'profile' %}"><i data-feather="user"></i> Profile</a>
-    </nav>
-
-    <a href="{% url 'logout' %}" class="logout">
-        <i data-feather="log-out"></i> Logout
-    </a>
-</aside>
-
-<!-- MAIN -->
-<main>
-<div class="container">
-
-<header>
+{% block content %}
+<div class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 rounded-2xl p-8 mb-8 text-white shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
+    
     <div>
-        <h1>Welcome back 👋</h1>
-        <p>{{ request.user.username }}</p>
+        <h1 class="text-3xl font-bold flex items-center gap-2">
+            Welcome back 👋
+        </h1>
+        <p class="opacity-90 mt-1 text-lg">{{ request.user.username }}</p>
     </div>
 
-    <!-- SEARCH BAR -->
-    <form action="{% url 'search_posts' %}" method="GET" class="dashboard-search">
-    <input
-    type="text"
-    name="q"
-    placeholder="Search posts or authors..."
-    >
+    <div class="flex items-center gap-4 w-full md:w-auto">
+        <form action="{% url 'search_posts' %}" method="GET" class="relative w-full md:w-80">
+            <input type="text" name="q" placeholder="Search posts or authors..." 
+                   class="w-full py-3 px-5 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-white/50 shadow-sm">
+        </form>
 
-</form>
-
-    <div class="header-right">
-
-        <!-- NOTIFICATION -->
-        <a href="{% url 'notifications' %}" class="notification-wrapper">
-            <div class="notification-bell">
-                <i data-feather="bell"></i>
-                {% if unread_notifications_count > 0 %}
-                    <span class="notification-count">
-                        {{ unread_notifications_count }}
-                    </span>
-                {% endif %}
-            </div>
+        <a href="{% url 'notifications' %}" class="relative p-2 bg-white/20 hover:bg-white/30 rounded-full transition">
+            <i data-feather="bell" class="w-6 h-6"></i>
+            {% if unread_notifications_count > 0 %}
+                <span class="absolute top-0 right-0 bg-red-500 w-3 h-3 rounded-full border-2 border-purple-600"></span>
+            {% endif %}
         </a>
 
-        <!-- PROFILE -->
-        <div class="profile">
-            <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=6366f1&color=fff">
-            <strong>{{ request.user.username }}</strong>
-        </div>
-
-    </div>
-</header>
-
-
-<div class="stats">
-    <div class="card">
-        <div class="icon"><i data-feather="file-text"></i></div>
-        <p>Total Posts</p>
-        <p class="number">{{ posts.count }}</p>
-    </div>
-
-    <div class="card">
-        <div class="icon"><i data-feather="eye"></i></div>
-        <p>Total Views</p>
-        <p class="number">{{ total_views }}</p>
-    </div>
-</div>
-
-<div class="lower">
-    <div class="card">
-        <h2>Post Views</h2>
-        <canvas id="viewsChart"></canvas>
-    </div>
-
-    <div class="card">
-        <h2>Recent Posts</h2>
-        {% for post in posts|slice:":5" %}
-            <div class="recent-post">
-                <a href="{% url 'post_detail' post.id %}">
-                    <div class="recent-post-title">{{ post.title }}</div>
-                    <div class="recent-post-date">{{ post.created_at|date:"M d, Y" }}</div>
-                </a>
+        <div class="flex items-center gap-3 bg-white/20 px-4 py-2 rounded-full">
+            <div class="bg-indigo-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 border-white">
+                {{ request.user.username|slice:":2"|upper }}
             </div>
-        {% empty %}
-            <p>No posts yet.</p>
-        {% endfor %}
+            <span class="font-semibold hidden sm:inline">{{ request.user.username }}</span>
+        </div>
     </div>
 </div>
 
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    
+    <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition duration-300 border border-gray-100 flex flex-col justify-between h-48">
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+            <i data-feather="file-text" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <p class="text-gray-500 font-medium mb-1">Total Posts</p>
+            <h3 class="text-4xl font-bold text-gray-800">{{ posts.count }}</h3>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition duration-300 border border-gray-100 flex flex-col justify-between h-48">
+        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4">
+            <i data-feather="eye" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <p class="text-gray-500 font-medium mb-1">Total Views</p>
+            <h3 class="text-4xl font-bold text-gray-800">{{ total_views }}</h3>
+        </div>
+    </div>
 </div>
-</main>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Post Views</h2>
+        <div class="h-64 w-full">
+            <canvas id="viewsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Recent Posts</h2>
+        
+        <div class="space-y-6">
+            {% for post in posts|slice:":4" %}
+                <div class="border-b border-gray-100 last:border-0 pb-4 last:pb-0">
+                    <a href="{% url 'post_detail' post.id %}" class="block group">
+                        <h4 class="font-bold text-gray-800 group-hover:text-indigo-600 transition mb-1 text-lg truncate">
+                            {{ post.title }}
+                        </h4>
+                        <span class="text-sm text-gray-400">{{ post.created_at|date:"M d, Y" }}</span>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="text-gray-400 mt-4">
+                    <p>No posts yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ chart_labels|json_script:"chart-labels-data" }}
+{{ chart_data|json_script:"chart-values-data" }}
 
 <script>
-new Chart(document.getElementById('viewsChart'), {
-    type: 'bar',
-    data: {
-        labels: {{ chart_labels|safe }},
-        datasets: [{
-            data: {{ chart_data|safe }},
-            backgroundColor: 'rgba(99, 102, 241, 0.7)',
-            borderRadius: 8
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
-    }
-});
+    feather.replace();
 
-feather.replace();
+    const labels = JSON.parse(document.getElementById('chart-labels-data').textContent);
+    const data = JSON.parse(document.getElementById('chart-values-data').textContent);
+
+    const ctx = document.getElementById('viewsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Views',
+                data: data,
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                borderColor: 'rgba(99, 102, 241, 1)',
+                borderWidth: 2,
+                borderRadius: 4,
+                barThickness: 30
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
 </script>
-
-</body>
-</html>
+{% endblock %}

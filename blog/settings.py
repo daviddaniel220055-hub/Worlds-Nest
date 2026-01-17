@@ -1,30 +1,29 @@
 import os
 from pathlib import Path
-
-import cloudinary
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 
 # =========================
 # BASE DIRECTORY
 # =========================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # =========================
 # SECURITY
 # =========================
-SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key")
+SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-key-for-dev")
 
-# DEBUG: True locally, False on Render
-# DEBUG = True
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+# DEBUG is set to True for now so you can see errors
+DEBUG = True
 
-ALLOWED_HOSTS = ["worlds-nest-1.onrender.com","localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["worlds-nest-1.onrender.com", "localhost", "127.0.0.1"]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
 
 # =========================
 # APPLICATIONS
@@ -48,14 +47,12 @@ INSTALLED_APPS = [
     "blogapp",
 ]
 
-
 # =========================
 # MIDDLEWARE
 # =========================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -63,7 +60,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 # =========================
 # URLS / TEMPLATES
@@ -88,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "blog.wsgi.application"
 
-
 # =========================
 # DATABASE
 # =========================
@@ -99,14 +94,12 @@ DATABASES = {
     )
 }
 
-
 # =========================
 # AUTH / LOGIN
 # =========================
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "post_list"
 LOGOUT_REDIRECT_URL = "login"
-
 
 # =========================
 # PASSWORD VALIDATION
@@ -118,7 +111,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
 # =========================
 # INTERNATIONALIZATION
 # =========================
@@ -126,7 +118,6 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
 
 # =========================
 # STATIC FILES (WhiteNoise)
@@ -137,9 +128,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 if not DEBUG:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-
 # =========================
-# MEDIA / CLOUDINARY
+# MEDIA / CLOUDINARY CONFIG
 # =========================
 MEDIA_URL = "/media/"
 
@@ -152,40 +142,18 @@ STORAGES = {
     },
 }
 
-# ⚠️ MOVE THESE TO ENV VARIABLES ASAP
+# I have enabled the keys you had commented out. 
+# Make sure these are YOUR actual keys from your dashboard.
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+    "CLOUD_NAME": "dnmj3dh9p",
+    "API_KEY": "193565585319528",
+    "API_SECRET": "RX_jhj47RixXw-NB6NUOonpJwbE",
 }
-
-cloudinary.config(
-    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.environ.get("CLOUDINARY_API_KEY"),
-    api_secret=os.environ.get("CLOUDINARY_API_SECRET"),
-    secure=True,
-)
-
-# CLOUDINARY_STORAGE = {
-#     "CLOUD_NAME": "dnmj3dh9p",
-#     "API_KEY": "193565585319528",
-#     "API_SECRET": "RX_jhj47RixXw-NB6NUOonpJwbE",
-# }
-
-# 🔥 THIS IS THE MISSING PART THAT FIXES THE ERROR
-# cloudinary.config(
-#     cloud_name="dnmj3dh9p",
-#     api_key="193565585319528",
-#     api_secret="RX_jhj47RixXw-NB6NUOonpJwbE",
-#     secure=True
-# )
-
 
 # =========================
 # CKEDITOR
 # =========================
 CKEDITOR_UPLOAD_PATH = "uploads/"
-
 
 # =========================
 # DEFAULT PRIMARY KEY

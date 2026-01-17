@@ -1,89 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>404 – Page Not Found</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'dashboard_base.html' %}
 
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f6f8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+{% block title %}404 - Page Not Found{% endblock %}
 
-        .container {
-            text-align: center;
-            background: #fff;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
+{% block header_title %}
+    <h1>Error 404 ⚠️</h1>
+    <p>Page not found</p>
+{% endblock %}
 
-        h1 {
-            font-size: 72px;
-            margin: 0;
-            color: #ff6b6b;
-        }
-
-        h2 {
-            margin: 10px 0;
-            color: #333;
-        }
-
-        p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .actions {
-            margin-top: 25px;
-        }
-
-        .actions a {
-            display: inline-block;
-            margin: 10px;
-            padding: 12px 20px;
-            text-decoration: none;
-            color: #fff;
-            background: #007bff;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        .actions a.secondary {
-            background: #6c757d;
-        }
-
-        .actions a:hover {
-            opacity: 0.9;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>404</h1>
-        <h2>Oops! Page Not Found</h2>
-
-        <p>
+{% block content %}
+<div class="flex items-center justify-center min-h-[60vh]">
+    <div class="bg-white p-10 rounded-2xl shadow-xl text-center max-w-lg w-full border border-gray-100">
+        
+        <h1 class="text-7xl font-bold text-red-500 mb-2">404</h1>
+        
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Oops! Page Not Found</h2>
+        
+        <p class="text-gray-600 mb-8 leading-relaxed">
             We couldn’t find the page you were looking for.
             It might have been removed, renamed, or you may be offline.
         </p>
 
-        <p>
-            Please check your internet connection or use one of the options below.
-        </p>
-
-        <div class="actions">
-            <a href="/">Go to Home</a>
-            <a href="javascript:history.back()" class="secondary">Go Back</a>
+        <div class="flex justify-center gap-4">
+            <a href="{% url 'dashboard' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                Go to Dashboard
+            </a>
+            
+            <a href="javascript:history.back()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                Go Back
+            </a>
         </div>
+
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
